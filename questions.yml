@@ -84,6 +84,17 @@ frequency:
     - daily
     - weekly
     - monthly
+  when: "{{ profile != 'performance-report' }}"
+
+periods_per_year:
+  type: str
+  help: Periods a year, or auto to read them from the dates (252 daily, 52 weekly, 12 monthly, 4 quarterly, 1 annual)
+  default: auto
+  when: "{{ profile == 'performance-report' }}"
+  validator: >-
+    {% if not (periods_per_year | regex_search('^(auto|[1-9][0-9]{0,2})$')) %}
+    Use auto, or a whole number of periods a year such as 12.
+    {% endif %}
 
 cost_bps:
   type: str
@@ -108,7 +119,7 @@ max_horizon:
 quant_agent_os_source:
   type: str
   help: Where to install quant-agent-os (Quant Toolbox) from, a git+https URL (with @tag) or a local path
-  default: git+https://github.com/yuxuzi/quant-agent-os@v0.9.0
+  default: git+https://github.com/yuxuzi/quant-agent-os@v1.0.0
   validator: >-
     {% if '"' in quant_agent_os_source or '\\' in quant_agent_os_source or ' ' in quant_agent_os_source or not quant_agent_os_source.strip() %}
     Use a git+https URL or a path written with forward slashes.
